@@ -21,8 +21,8 @@ class Player {
 class Monster {
   constructor(stage) {
     this.hp = 80 + stage * 20; // 스테이지에 따라 체력 증가
-    this.minAtk = 3 + stage * 2; // 스테이지에 따라 최소 공격력 증가
-    this.maxAtk = 6 + stage * 3; // 스테이지에 따라 최대 공격력 증가
+    this.minAtk = 3 + stage * 1; // 스테이지에 따라 최소 공격력 증가 (밸런스 조정)
+    this.maxAtk = 6 + stage * 2; // 스테이지에 따라 최대 공격력 증가 (밸런스 조정)
   }
 
   attack(player) {
@@ -67,7 +67,7 @@ const battle = async (stage, player, monster) => {
     // 플레이어 행동 선택지 출력
     console.log(
       chalk.green(`
-1. 공격한다 2. 도망가기.`)
+1. 공격한다 2. 연속공격 (${player.multiAttackChance}%) 3. 방어한다 (${player.defenseChance}%) 4. 도망친다 (${player.escapeChance}%)`)
     );
     const choice = readlineSync.question('당신의 선택은? ');
 
@@ -83,11 +83,50 @@ const battle = async (stage, player, monster) => {
       const monsterDamage = monster.attack(player);
       logs.push(chalk.red(`몬스터가 플레이어에게 ${monsterDamage}의 데미지를 입혔습니다.`));
     } else if (choice === '2') {
-      // 도망 로직 (이후 구현)
+      const multiAttackSuccess = Math.random() * 100 < player.multiAttackChance;
+      if (multiAttackSuccess) {
+        const firstDamage = player.attack(monster);
+        logs.push(chalk.yellow(`플레이어가 몬스터에게 ${firstDamage}의 데미지를 입혔습니다. (연속공격)`));
+        if (monster.hp > 0) {
+          const secondDamage = player.attack(monster);
+          logs.push(chalk.yellow(`플레이어가 몬스터에게 ${secondDamage}의 데미지를 입혔습니다. (연속공격)`));
+        }
+      } else {
+        logs.push(chalk.red('연속공격에 실패했습니다...'));
+      }
+
+      if (monster.hp <= 0) {
+        logs.push(chalk.green('몬스터를 물리쳤습니다!'));
+        break; // 전투 종료
+      }
+
+      const monsterDamage = monster.attack(player);
+      logs.push(chalk.red(`몬스터가 플레이어에게 ${monsterDamage}의 데미지를 입혔습니다.`));
+    } else if (choice === '3') {
+      const defenseSuccess = Math.random() * 100 < player.defenseChance;
+      if (defenseSuccess) {
+        logs.push(chalk.green('방어에 성공했습니다!'));
+        const counterDamage = Math.floor(player.maxAtk * 0.5); // 최대 공격력의 50%로 반격
+        monster.hp -= counterDamage;
+        logs.push(chalk.yellow(`몬스터에게 ${counterDamage}의 반격 데미지를 입혔습니다.`));
+      } else {
+        logs.push(chalk.red('방어에 실패했습니다...'));
+        const monsterDamage = monster.attack(player);
+        logs.push(chalk.red(`몬스터가 플레이어에게 ${monsterDamage}의 데미지를 입혔습니다.`));
+      }
+    } else if (choice === '4') {
+      const escapeSuccess = Math.random() * 100 < player.escapeChance;
+      if (escapeSuccess) {
+        logs.push(chalk.green('성공적으로 도망쳤습니다!'));
+        return; // 전투 즉시 종료
+      } else {
+        logs.push(chalk.red('도망에 실패했습니다...'));
+        const monsterDamage = monster.attack(player);
+        logs.push(chalk.red(`몬스터가 플레이어에게 ${monsterDamage}의 데미지를 입혔습니다.`));
+      }
     }
   }
-  // 여기서 player.hp <= 0일 때 전투 종료, 패배 로직 필요
-};
+  if (player.hp <= 0) {    logs.push(chalk.red.bold('\nGAME OVER'));    logs.push(chalk.yellow('당신은 몬스터에게 패배했습니다...'));    return; // 전투 종료  };
 
 // startGame: 전체 게임 흐름 제어 함수
 export async function startGame() {
@@ -107,7 +146,7 @@ export async function startGame() {
       console.log(chalk.blue(`체력을 ${recoveredHp}만큼 회복했습니다.`));
       readlineSync.question('다음 스테이지로 가려면 엔터를 누르세요...');
     } else {
-      console.log(chalk.red('플레이어가 사망했습니다. 게임 오버!'));
+      console.log(chalk.red('유 다이. 게임 오버!'));
       break; // 게임 루프 종료
     }
 
