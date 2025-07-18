@@ -100,11 +100,16 @@ export async function startGame() {
     const monster = new Monster(stage);  // 새로운 몬스터 생성
     await battle(stage, player, monster); // 전투 진행
 
-    // TODO: 전투 후
-    // - 스테이지 클리어 조건 체크
-    // - player.hp 회복 로직
-    // - monster 강해지기 로직
-    // - 게임 종료(모든 스테이지 클리어 or player.hp <= 0) 처리
+    if (player.hp > 0) {
+      console.log(chalk.green(`Stage ${stage} 클리어!`));
+      const recoveredHp = Math.floor(player.hp * 0.3); // 남은 체력의 30% 회복
+      player.hp += recoveredHp;
+      console.log(chalk.blue(`체력을 ${recoveredHp}만큼 회복했습니다.`));
+      readlineSync.question('다음 스테이지로 가려면 엔터를 누르세요...');
+    } else {
+      console.log(chalk.red('플레이어가 사망했습니다. 게임 오버!'));
+      break; // 게임 루프 종료
+    }
 
     stage++;
   }
