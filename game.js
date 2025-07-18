@@ -8,6 +8,9 @@ class Player {
     this.hp = 100;
     this.minAtk = 5;
     this.maxAtk = 10;
+    this.multiAttackChance = 20; // 연속 공격 확률
+    this.defenseChance = 15;     // 방어 확률
+    this.escapeChance = 30;      // 도망 확률
   }
 
   attack(monster) {
@@ -126,10 +129,11 @@ const battle = async (stage, player, monster) => {
       }
     }
   }
-  if (player.hp <= 0) {    logs.push(chalk.red.bold('\nGAME OVER'));    logs.push(chalk.yellow('당신은 몬스터에게 패배했습니다...'));    return; // 전투 종료  };
-
+  if (player.hp <= 0) {    logs.push(chalk.red.bold('\nGAME OVER'));    logs.push(chalk.yellow('당신은 몬스터에게 패배했습니다...'));    return; // 전투 종료  
+  }
+}
 // startGame: 전체 게임 흐름 제어 함수
-export async function startGame() {
+async function startGame() {
   console.clear();
   const player = new Player();  // 플레이어 생성
   let stage = 1;
@@ -164,3 +168,5 @@ export async function startGame() {
   }
   // TODO: 최종 클리어 메시지 또는 패배 메시지 출력
 }
+
+export { startGame };

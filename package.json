@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "description": "",
+  "type": "module",
   "dependencies": {
     "chalk": "^5.4.1",
     "figlet": "^1.8.2",

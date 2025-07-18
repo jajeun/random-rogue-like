@@ -2,6 +2,7 @@
 import chalk from 'chalk';
 import figlet from 'figlet';
 import readlineSync from 'readline-sync';
+import {test} from "./test.mjs";
 import {startGame} from "./game.js";
 
 // displayLobby: 게임 로비 화면을 그려주는 함수입니다.
