@@ -1,4 +1,3 @@
-
 // game.js
 import chalk from 'chalk';                   // 콘솔 색상 출력을 위한 라이브러리
 import readlineSync from 'readline-sync';     // 동기식 키보드 입력 처리
@@ -6,8 +5,9 @@ import readlineSync from 'readline-sync';     // 동기식 키보드 입력 처�
 // Player: 플레이어의 상태와 행동을 관리하는 클래스
 class Player {
   constructor() {
-    this.hp = 100;   // 초기 체력 설정
-    // TODO: 추가 스탯 (공격력, 방어력, 도망 확률 등)도 여기에서 정의할 수 있습니다.
+    this.hp = 100;
+    this.minAtk = 5;
+    this.maxAtk = 10;
   }
 
   attack() {
@@ -18,9 +18,10 @@ class Player {
 
 // Monster: 몬스터의 상태와 행동을 관리하는 클래스
 class Monster {
-  constructor() {
-    this.hp = 100;   // 초기 몬스터 체력 설정
-    // TODO: 스테이지(stage)에 따라 hp, 공격력 등을 조정하는 로직을 추가할 수 있습니다.
+  constructor(stage) {
+    this.hp = 80 + stage * 20; // 스테이지에 따라 체력 증가
+    this.minAtk = 3 + stage * 2; // 스테이지에 따라 최소 공격력 증가
+    this.maxAtk = 6 + stage * 3; // 스테이지에 따라 최대 공격력 증가
   }
 
   attack() {
