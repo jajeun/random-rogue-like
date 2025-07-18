@@ -136,19 +136,11 @@ async function playMathPuzzle(player) {
   console.log(chalk.cyan(`\n숫자 카드: [${numbers.join(', ')}]`));
   console.log(chalk.cyan(`연산 카드: [${operators.join(', ')}]`));
 
-  const startTime = Date.now();
   let puzzleResult = null;
   let inputValid = false;
 
   while (!inputValid) {
     const input = readlineSync.question('수식 입력: ');
-    const endTime = Date.now();
-    const timeTaken = (endTime - startTime) / 1000; // 초 단위
-
-    if (timeTaken > 30) {
-      console.log(chalk.red('시간 초과! 퍼즐 실패. 아무것도 얻지 못했습니다.'));
-      return; // 퍼즐 실패 시 함수 종료
-    }
 
     // 괄호 사용 검사
     if (input.includes('(') || input.includes(')')) {
