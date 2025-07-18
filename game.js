@@ -152,5 +152,15 @@ export async function startGame() {
 
     stage++;
   }
+  if (stage > 10) {
+    console.log(chalk.cyan.bold('\nCONGRATULATIONS!'));
+    console.log(chalk.yellow('모든 몬스터를 물리치고 게임에서 승리했습니다!'));
+    console.log(chalk.magentaBright('\n=== 최종 능력치 ==='));
+    console.log(chalk.blue(`HP: ${player.hp.toFixed(1)}`));
+    console.log(chalk.blue(`공격력: ${player.minAtk}~${player.maxAtk}`));
+    console.log(chalk.blue(`도망 확률: ${player.escapeChance}%`));
+    console.log(chalk.blue(`연속 공격 확률: ${player.multiAttackChance}%`));
+    console.log(chalk.blue(`방어 확률: ${player.defenseChance}%`));
+  }
   // TODO: 최종 클리어 메시지 또는 패배 메시지 출력
 }
