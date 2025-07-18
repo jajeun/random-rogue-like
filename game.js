@@ -10,9 +10,10 @@ class Player {
     this.maxAtk = 10;
   }
 
-  attack() {
-    // 플레이어가 공격할 때 호출되는 메서드
-    // 예: 몬스터 hp를 감소시키는 로직을 구현합니다.
+  attack(monster) {
+    const damage = Math.floor(Math.random() * (this.maxAtk - this.minAtk + 1)) + this.minAtk;
+    monster.hp -= damage;
+    return damage;
   }
 }
 
@@ -24,9 +25,10 @@ class Monster {
     this.maxAtk = 6 + stage * 3; // 스테이지에 따라 최대 공격력 증가
   }
 
-  attack() {
-    // 몬스터가 플레이어를 공격할 때 호출되는 메서드
-    // 예: 플레이어 hp를 감소시키는 로직을 구현합니다.
+  attack(player) {
+    const damage = Math.floor(Math.random() * (this.maxAtk - this.minAtk + 1)) + this.minAtk;
+    player.hp -= damage;
+    return damage;
   }
 }
 
@@ -35,13 +37,15 @@ class Monster {
 // - player: Player 인스턴스
 // - monster: Monster 인스턴스
 function displayStatus(stage, player, monster) {
-  console.log(chalk.magentaBright(`\n=== Current Status ===`));
+  console.log(chalk.magentaBright(`
+=== Current Status ===`));
   console.log(
     chalk.cyanBright(`| Stage: ${stage} `) +
-    chalk.blueBright(`| 플레이어 정보`) +
-    chalk.redBright(`| 몬스터 정보 |`)
+    chalk.blueBright(`| 플레이어 HP: ${player.hp.toFixed(1)} `) +
+    chalk.redBright(`| 몬스터 HP: ${monster.hp.toFixed(1)} |`)
   );
-  console.log(chalk.magentaBright(`=====================\n`));
+  console.log(chalk.magentaBright(`=================================================
+`));
 }
 
 // battle: 턴제 전투를 처리하는 비동기 함수
@@ -62,16 +66,25 @@ const battle = async (stage, player, monster) => {
 
     // 플레이어 행동 선택지 출력
     console.log(
-      chalk.green(`\n1. 공격한다 2. 아무것도 하지않는다.`)
+      chalk.green(`
+1. 공격한다 2. 도망가기.`)
     );
     const choice = readlineSync.question('당신의 선택은? ');
 
-    // TODO: choice 값에 따라
-    // 1) 공격: player.attack() 호출 → monster.hp 감소,
-    // 2) 아무것도 안함: 턴 스킵
-    // 3) 그 외: 잘못된 입력 처리
-    // 이후 몬스터의 attack() 호출 로직도 추가해야 합니다.
-    logs.push(chalk.green(`${choice}를 선택하셨습니다.`));
+    if (choice === '1') {
+      const playerDamage = player.attack(monster);
+      logs.push(chalk.yellow(`플레이어가 몬스터에게 ${playerDamage}의 데미지를 입혔습니다.`));
+
+      if (monster.hp <= 0) {
+        logs.push(chalk.green('몬스터를 물리쳤습니다!'));
+        break; // 전투 종료
+      }
+
+      const monsterDamage = monster.attack(player);
+      logs.push(chalk.red(`몬스터가 플레이어에게 ${monsterDamage}의 데미지를 입혔습니다.`));
+    } else if (choice === '2') {
+      // 도망 로직 (이후 구현)
+    }
   }
   // 여기서 player.hp <= 0일 때 전투 종료, 패배 로직 필요
 };
