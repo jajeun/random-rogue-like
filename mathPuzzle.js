@@ -84,8 +84,8 @@ export async function playMathPuzzle(player, lostHp) {
   console.log(chalk.yellow(`주어진 숫자와 연산자를 사용하여 목표 숫자 ${targetNumber}를 만드는 수식을 입력하세요!`));
   console.log(chalk.yellow('수식을 입력하세요. (예: 8 + 2 * 5 - 1)'));
 
-  console.log(chalk.cyan(`\n숫자 카드: [${numbers.join(', ')}]`));
-  console.log(chalk.cyan(`연산 카드: [${operators.join(', ')}]`));
+  console.log(chalk.cyan('\n숫자 카드: [' + numbers.join(', ') + ']'));
+  console.log(chalk.cyan('연산 카드: [' + operators.join(', ') + ']'));
 
   let puzzleResult = null;
   let inputValid = false;
@@ -111,11 +111,11 @@ export async function playMathPuzzle(player, lostHp) {
 
   let v = 0; // 보너스 계수
   if (puzzleResult === targetNumber) {
-    console.log(chalk.green.bold('정답입니다! 완벽한 보너스를 얻습니다!'));
-    v = 1.0; // 100% 보너스
+    console.log(chalk.green.bold('정답입니다! 완벽한 보너스를 얻습니다! (효과 적용 계수 0.5)'));
+    v = 0.5; // 50%
   } else if (Math.abs(puzzleResult - targetNumber) <= Math.min(...numbers)) {
-    console.log(chalk.yellow.bold('아쉽지만 근접했습니다! 부분 보너스를 얻습니다.'));
-    v = 0.5; // 50% 보너스
+    console.log(chalk.yellow.bold('아쉽지만 근접했습니다! 부분 보너스를 얻습니다. (효과 적용 계수 0.25)'));
+    v = 0.25; // 25%
   } else {
     console.log(chalk.red.bold('정답과 너무 멀리 떨어져 있습니다. 보너스 없음.'));
   }
@@ -124,7 +124,7 @@ export async function playMathPuzzle(player, lostHp) {
 
   if (v > 0) {
     console.log(chalk.yellow('\n어떤 능력치에 보너스를 적용하시겠습니까?'));
-    console.log(chalk.blue('1. 체력 회복 (잃은 체력의 1.5배)'));
+    console.log(chalk.blue('1. 체력 회복 (직전 스테이지 잃은 체력의 2배)'));
     console.log(chalk.blue('2. 공격력 증가'));
     console.log(chalk.blue('3. 연속 공격 확률 증가'));
     console.log(chalk.blue('4. 방어 확률 증가'));
@@ -142,7 +142,7 @@ export async function playMathPuzzle(player, lostHp) {
     }
 
     if (statChoice === '1') {
-      const recoveryAmount = lostHp * 1.5 * v;
+      const recoveryAmount = lostHp * 1.75 * v;
       player.hp += recoveryAmount;
       console.log(chalk.green(`체력을 ${recoveryAmount.toFixed(1)}만큼 회복했습니다! 현재 HP: ${player.hp.toFixed(1)}`));
     } else if (statChoice === '2') {

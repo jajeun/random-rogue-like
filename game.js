@@ -12,9 +12,6 @@ class Player {
     this.multiAttackChance = 33; // 연속 공격 확률
     this.defenseChance = 33;     // 방어 확률
     this.escapeChance = 10;      // 도망 확률
-    this.monsterMinObservedAtk = null; // 몬스터의 관찰된 최소 공격력
-    this.monsterMaxObservedAtk = null; // 몬스터의 관찰된 최대 공격력
-    this.monsterMinObservedAtk = null; // 몬스터의 관찰된 최소 공격력
     this.monsterMaxObservedAtk = null; // 몬스터의 관찰된 최대 공격력
   }
 
@@ -50,7 +47,7 @@ function displayStatus(stage, player, monster) {
   console.log(
     chalk.cyanBright(`| Stage: ${stage} `) +
     chalk.blueBright(`| 플레이어 HP: ${player.hp.toFixed(1)} `) +
-    chalk.redBright(`| 몬스터 HP: ${monster.hp.toFixed(1)} | 몬스터 공격력: ${player.monsterMinObservedAtk !== null ? player.monsterMinObservedAtk : '???'}~${player.monsterMaxObservedAtk !== null ? player.monsterMaxObservedAtk : '???'} |`)
+    chalk.redBright(`| 몬스터 HP: ${monster.hp.toFixed(1)} |`)
   );
 
   console.log(chalk.blue(`| 공격력: ${player.minAtk}~${player.maxAtk} `) +
