@@ -1,11 +1,10 @@
-"""// game.js
 import chalk from 'chalk';
 import readlineSync from 'readline-sync';
 import { playMathPuzzle } from './mathPuzzle.js';
 import { Player } from './player.js';
 import { Monster } from './monster.js';
 import { battle } from './battle.js';
-""
+
 
 // startGame: 전체 게임 흐름 제어 함수
 async function startGame() {
