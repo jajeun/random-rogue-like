@@ -81,8 +81,8 @@ export async function playMathPuzzle(player, lostHp) {
   const operators = puzzleData.operators;
   const targetNumber = puzzleData.targetNumber;
 
-  console.log(chalk.yellow(`주어진 숫자와 연산자를 사용하여 목표 숫자 ${targetNumber}를 만드는 수식을 입력하세요!`));
-  console.log(chalk.yellow('수식을 입력하세요. (예: 8 + 2 * 5 - 1)'));
+  console.log(chalk.yellow(`주어진 숫자와 연산자를 사용하여 목표 숫자 ${targetNumber.toFixed(3)}에 가까운 수를 만드는 수식을 입력하세요!`));
+  console.log(chalk.yellow('수식을 입력하세요. 예: (8 + 2) * 5 - 1'));
 
   console.log(chalk.cyan('\n숫자 카드: [' + numbers.join(', ') + ']'));
   console.log(chalk.cyan('연산 카드: [' + operators.join(', ') + ']'));
@@ -112,10 +112,10 @@ export async function playMathPuzzle(player, lostHp) {
   let v = 0; // 보너스 계수
   if (puzzleResult === targetNumber) {
     console.log(chalk.green.bold('정답입니다! 완벽한 보너스를 얻습니다! (효과 적용 계수 0.5)'));
-    v = 0.5; // 50%
+    v = 0.75; // 50%
   } else if (Math.abs(puzzleResult - targetNumber) <= Math.min(...numbers)) {
     console.log(chalk.yellow.bold('아쉽지만 근접했습니다! 부분 보너스를 얻습니다. (효과 적용 계수 0.25)'));
-    v = 0.25; // 25%
+    v = 0.5; // 25%
   } else {
     console.log(chalk.red.bold('정답과 너무 멀리 떨어져 있습니다. 보너스 없음.'));
   }
